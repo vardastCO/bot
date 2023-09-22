@@ -1,0 +1,13 @@
+version: '3'
+services:
+  go-app:
+    build:
+      context: ./go-app  # The path to the directory containing your Go app
+    ports:
+      - "8080:8080"     # Map your Go app's port to the host
+
+  node-app:
+    build:
+      context: ./node-app  # The path to the directory containing your Node.js app
+    ports:
+      - "3000:3000"       # Map your Node.js app's port to the host
