@@ -1,20 +1,17 @@
-# Use an official Node.js runtime as a parent image
-FROM node:18-alpine
+FROM ghcr.io/puppeteer/puppeteer:19.7.2
+WORKDIR /usr/src/app
 
-# Set the working directory to /app
-WORKDIR /app
+# We don't need the standalone Chromium
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true \ 
+   PUPPETEER_EXECUTABLE_PATH = /usr/bin/google-chrome-stable
 
-# Copy package.json and package-lock.json to the working directory
-COPY package*.json ./
 
-# Install app dependencies
-RUN npm install
-
-# Bundle app source
 COPY . .
 
-# Expose the port your app runs on
-EXPOSE 3000
+RUN npm install
 
-# Command to run the Node.js application
-CMD ["node", "app.js"]
+# Expose port 3002 for your Node.js application.
+EXPOSE 3002
+
+# Start your Node.js application.
+CMD ["node", "scrape.js"]
