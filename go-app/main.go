@@ -51,7 +51,7 @@ func main() {
 	startWorker(initialURL)
 
 	// Create additional worker Goroutines.
-	numWorkers := 2
+	numWorkers := 10
 	for i := 1; i < numWorkers; i++ {
 		wg.Add(1) // Increment the WaitGroup for each worker
 		go func(workerID int) {
@@ -88,12 +88,17 @@ func closeCSVFile() {
 }
 
 func startWorker(url string) {
+
 	// Create a worker Goroutine.
 	go func() {
-		defer wg.Done() // Decrement the WaitGroup when the worker finishes
-
+		defer wg.Done() 
+		
+		// Decrement the WaitGroup when the worker finishes
+		
 		// Capture the JSON output from scrape.js for this worker.
-		cmd := exec.Command("node", "scrape.js", url)
+		cmd := exec.Command("node", "/usr/src/app/scrape.js", url)
+		// cmd.Dir = "/app"
+
 		cmd.Env = append(os.Environ(), "WORKER_ID=1") // You can set a unique worker ID here
 
 		// Capture stdout from the Node.js process.

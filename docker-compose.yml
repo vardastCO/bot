@@ -2,19 +2,32 @@ version: '3'
 services:
   go-app:
     build:
-      context: ./go-app  # The path to the directory containing your Go app
+      context: ./go-app
+    depends_on:
+      - node-app
+      - postgres
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USER=db
+      - DB_PASSWORD=root
+      - DB_NAME=db
     ports:
-      - "8080:8080"     # Map your Go app's port to the host
+      - "8080:8080"
     networks:
       - mynetwork
+    volumes:
+      - ./go-app:/app
 
   node-app:
     build:
-      context: ./node-app  # The path to the directory containing your Node.js app
+      context: ./node-app
     ports:
-      - "3000:3000"       # Map your Node.js app's port to the host
+      - "3002:3002"
     networks:
       - mynetwork
+    volumes:
+      - ./node-app:/usr/src/app
 
   postgres:
     image: postgres:latest
@@ -23,7 +36,7 @@ services:
       POSTGRES_PASSWORD: root
       POSTGRES_DB: db
     ports:
-      - "5432:5432"  # Map PostgreSQL port to the host
+      - "5432:5432"
     volumes:
       - ./postgres-data:/var/lib/postgresql/data 
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
